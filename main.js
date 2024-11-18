@@ -9,23 +9,9 @@ let gameFrame = 0;
 ctx.font = '50px Georgia';
 
 const keys = [];
-let fruits = [];
-
-// Mouse Interactivity 
-// let canvasPosition = canvas.getBoundingClientRect(); 
-
-// const mouse = {
-//     x: canvas.width/2, 
-//     y: canvas.height/2, 
-//     click : false
-// }
-// canvas.addEventListener('mousedown', function(event){
-//     mouse.x = event.x - canvasPosition.left;  
-//     mouse.y = event.y - canvasPosition.top;
-// });
+const scoreElement = document.getElementById("score");
 
 // Player  
-
 const player = {
     x: 200,
     y: 300,
@@ -39,20 +25,7 @@ const player = {
     scale: 2,
 };
 
-// const fruit = {
-//     x: 100,
-//     y: 300,
-//     width: 16,
-//     height: 16,
-//     frameX: 0,
-//     frameY: 0,
-//     speed: 9,
-//     moving: false,
-//     scaled: false,
-//     scale: 2,
-//     eaten: false,
-// };
-
+//Fruit
 class fruit {
     constructor(x, y) {
         this.x = x;
@@ -69,10 +42,17 @@ class fruit {
     }
 }
 
-// let x; 
-// let y;
-// let fruitArray = new fruit(x, y);
-console.log("fruts: ", fruit.scaled);
+let fruits = [
+    new fruit(100, 100),
+    new fruit(200, 100),
+    new fruit(300, 200),
+    new fruit(150, 250),
+    new fruit(150, 300),
+    new fruit(100, 250)
+];
+
+
+//console.log("fruts: ", fruit.scaled);
 
 const playerSprite = new Image();
 playerSprite.src = "/assets/pygmy/pygmy-hippo-walk.png";
@@ -81,59 +61,47 @@ background.src = "/assets/tattooine-game-background.png";
 const fruitSprite = new Image();
 fruitSprite.src = "/assets/fruit.png";
 
+//Draw images
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
 
-function arrayFruit(x, y) {
-    // for(let i = 0; i < 5; i++) {
-    let fruitArray = new fruit(x, y);
-    fruits.push(fruitArray);
-    console.log("fruit.scaled: ", fruitArray.scaled);
-   // console.log('fruit pushed index: ', fruits[i]);
+// function arrayFruit(x, y) {
+//     // for(let i = 0; i < 5; i++) {
+//     let fruitArray = new fruit(x, y);
+//     fruits.push(fruitArray);
+//     console.log("fruit.scaled: ", fruitArray.scaled);
+//    // console.log('fruit pushed index: ', fruits[i]);
 
-    // }
-}
+//     // }
+// }
 
 function drawFruit() {
-    //let fruitArray = new fruit(1, 2);
-    arrayFruit(300, 200);
-    //console.log('fruit.x: ', fruitArray.x);
-    //console.log('fruitArray.y: ', fruitArray.y);
-    arrayFruit(200, 100);
-    //console.log('fruitArray.x: ', fruitArray.x);
-    //console.log('fruitArray.y: ', fruitArray.y);
-    arrayFruit(400, 500);
-    //console.log('fruitArray.x: ', fruitArray.x);
-    //console.log('fruitArray.y: ', fruitArray.y);
-
-
-    for (let i = 0; i < 4; i++) {
-
+   // fruits = fruits.filter(fruit => !fruit.eaten); // Remove eaten fruits
+    for (let i = fruits.length - 1; i >= 0; i--) {
         checkFruit(i);
     }
-}
+  }
 
-function checkFruit(i, x, y) {
-    
-
+//Check if fruit is eaten or not
+function checkFruit(i) {
+    const fruit = fruits[i];
     if (player.x + player.width >= fruit.x && //left side of player and right side of fruit
         player.x <= fruit.x + fruit.width && //right side of player and left side of fruit
         player.y + player.height >= fruit.y && //bottom side of player and top side of fruit
         player.y <= fruit.y + fruit.height) { //top side of player and bottom side of fruit
         fruit.eaten = true;
-        fruits.splice(i, 1); //remove dot
-        console.log('eaten1:', fruit.eaten);
+        fruits.splice(i, 1); //remove fruit
+        score++; //updating score
+         
+        //console.log('eaten1:', fruit.eaten);
+
+    
     } else {
-        // drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
-        //     fruit.x, fruit.y, fruit.width, fruit.height);
         drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
             fruit.x, fruit.y, fruit.width, fruit.height);
         console.log('eaten2:', fruit.eaten);
-
-
     }
-    // console.log('not');
     // console.log(fruit.eaten);
 }
 
@@ -143,6 +111,8 @@ function checkFruit(i, x, y) {
 //         player.height *= player.scale; 
 //         player.scaled = true; // Set the flag to true after scaling }
 
+
+//Arrow Keys
 window.addEventListener("keydown", function (e) {
     keys[e.keyCode] = true;
     player.moving = true;
@@ -228,6 +198,7 @@ function animate() {
         drawFruit();
         movePlayer();
         handlePlayerFrame();
+        scoreElement.textContent = "Score: " + score;
 
 
 
