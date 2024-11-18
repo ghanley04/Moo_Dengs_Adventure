@@ -69,7 +69,10 @@ class fruit {
     }
 }
 
-console.log("fruts: ", fruit.x);
+// let x; 
+// let y;
+// let fruitArray = new fruit(x, y);
+console.log("fruts: ", fruit.scaled);
 
 const playerSprite = new Image();
 playerSprite.src = "/assets/pygmy/pygmy-hippo-walk.png";
@@ -84,22 +87,25 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
 
 function arrayFruit(x, y) {
     // for(let i = 0; i < 5; i++) {
-    fruits.push(new fruit(x, y));
+    let fruitArray = new fruit(x, y);
+    fruits.push(fruitArray);
+    console.log("fruit.scaled: ", fruitArray.scaled);
    // console.log('fruit pushed index: ', fruits[i]);
 
     // }
 }
 
 function drawFruit() {
+    //let fruitArray = new fruit(1, 2);
     arrayFruit(300, 200);
-    console.log('fruit.x: ', fruit.x);
-    console.log('fruit.y: ', fruit.y);
+    //console.log('fruit.x: ', fruitArray.x);
+    //console.log('fruitArray.y: ', fruitArray.y);
     arrayFruit(200, 100);
-    console.log('fruit.x: ', fruit.x);
-    console.log('fruit.y: ', fruit.y);
+    //console.log('fruitArray.x: ', fruitArray.x);
+    //console.log('fruitArray.y: ', fruitArray.y);
     arrayFruit(400, 500);
-    console.log('fruit.x: ', fruit.x);
-    console.log('fruit.y: ', fruit.y);
+    //console.log('fruitArray.x: ', fruitArray.x);
+    //console.log('fruitArray.y: ', fruitArray.y);
 
 
     for (let i = 0; i < 4; i++) {
@@ -108,7 +114,9 @@ function drawFruit() {
     }
 }
 
-function checkFruit(i) {
+function checkFruit(i, x, y) {
+    
+
     if (player.x + player.width >= fruit.x && //left side of player and right side of fruit
         player.x <= fruit.x + fruit.width && //right side of player and left side of fruit
         player.y + player.height >= fruit.y && //bottom side of player and top side of fruit
