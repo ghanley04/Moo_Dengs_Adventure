@@ -13,13 +13,27 @@ const scoreElement = document.getElementById("score");
 
 // Player  
 const player = {
-    x: 200,
-    y: 300,
+    x: 450,
+    y: 450,
     width: 32,
     height: 36,
     frameX: 0,
     frameY: 0,
     speed: 9,
+    moving: false,
+    scaled: false,
+    conquered: false,
+    scale: 2,
+};
+
+const enemy = {
+    x: 0,
+    y: 0,
+    width: 32,
+    height: 48,
+    frameX: 0,
+    frameY: 0,
+    speed: 6,
     moving: false,
     scaled: false,
     scale: 2,
@@ -60,6 +74,8 @@ const background = new Image();
 background.src = "/assets/tattooine-game-background.png";
 const fruitSprite = new Image();
 fruitSprite.src = "/assets/fruit.png";
+const enemySprite = new Image();
+enemySprite.src = "assets/darthvader.png";
 
 //Draw images
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
@@ -77,11 +93,11 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
 // }
 
 function drawFruit() {
-   // fruits = fruits.filter(fruit => !fruit.eaten); // Remove eaten fruits
+    // fruits = fruits.filter(fruit => !fruit.eaten); // Remove eaten fruits
     for (let i = fruits.length - 1; i >= 0; i--) {
         checkFruit(i);
     }
-  }
+}
 
 //Check if fruit is eaten or not
 function checkFruit(i) {
@@ -93,10 +109,6 @@ function checkFruit(i) {
         fruit.eaten = true;
         fruits.splice(i, 1); //remove fruit
         score++; //updating score
-         
-        //console.log('eaten1:', fruit.eaten);
-
-    
     } else {
         drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
             fruit.x, fruit.y, fruit.width, fruit.height);
@@ -105,12 +117,42 @@ function checkFruit(i) {
     // console.log(fruit.eaten);
 }
 
-// function scalePlayer() { 
-//     if (!player.scaled) { 
-//         player.width *= player.scale; 
-//         player.height *= player.scale; 
-//         player.scaled = true; // Set the flag to true after scaling }
+//Enemy 
+function moveEnemy() {
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
+    if (distance > 1) {
+        enemy.x += (dx / distance) * enemy.speed;
+        enemy.y += (dy / distance) * enemy.speed;
+    }
+}
+
+function checkEnemy() {
+    if (enemy.x + enemy.width >= player.x && //left side of enemy and right side of player
+        enemy.x <= player.x + player.width && //right side of enemy and left side of player
+        enemy.y + enemy.height >= player.y && //bottom side of enemy and top side of player
+        enemy.y <= player.y + player.height) //top side of enemy and bottom side of player
+        { 
+        player.conquered = true;
+        console.log('eaten3:', player.conquered);
+    } else {
+
+        console.log('eaten4:', player.conquered);
+    }
+} 
+
+
+function displayGameOver() {
+ // Clear the canvas
+    document.getElementsByClassName("lose")[0].style.display = 'block'; //Reveal Message
+}
+
+function displayWinMessage() {
+ // Clear the canvas
+    document.getElementsByClassName("win")[0].style.display = 'block'; //Reveal Message
+}
 
 //Arrow Keys
 window.addEventListener("keydown", function (e) {
@@ -190,14 +232,31 @@ function animate() {
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clears between each loop
-        //ctx.drawImage(background, 0, 0, canvas.width, canvas.height); //turn x to poisiton for moving backround
-        // drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
-        //     fruit.x, fruit.y, fruit.width, fruit.height);
+        // ctx.drawImage(background, 0, 0, canvas.width, canvas.height); //turn x to poisiton for moving backround
+        //  drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
+        //      fruit.x, fruit.y, fruit.width, fruit.height);
+        
+        if (player.conquered) {
+            displayGameOver(); // Show the game over message if the player is conquered
+            return; // Stop the game loop by returning early
+        }else if(fruits.length === 0) {
+            // All fruits are eaten
+            displayWinMessage();
+            return;
+        }
+        
+        
+        drawFruit();
         drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height,
             player.x, player.y, player.width, player.height);
-        drawFruit();
+        drawSprite(enemySprite, enemy.width * enemy.frameX, enemy.height * enemy.frameY, enemy.width, enemy.height,
+                enemy.x, enemy.y, enemy.width, enemy.height);
         movePlayer();
+        moveEnemy();
+        checkEnemy();
+
         handlePlayerFrame();
+
         scoreElement.textContent = "Score: " + score;
 
 
@@ -232,4 +291,3 @@ startAnimating(15);
 //     ctx.scale(2, 2);
 //     ctx.strokeRect(5, 5, 25, 15);
 //   }
-
