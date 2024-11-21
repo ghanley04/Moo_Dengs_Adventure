@@ -1,8 +1,8 @@
 //Canvas Setup
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = 512;
+canvas.height = 512;
 
 let score = 0;
 let gameFrame = 0;
@@ -57,40 +57,77 @@ class fruit {
 }
 
 let fruits = [
-    new fruit(100, 100),
-    new fruit(200, 100),
-    new fruit(300, 200),
-    new fruit(150, 250),
-    new fruit(150, 300),
-    new fruit(100, 250)
+    new fruit(120, 210),
+    new fruit(205, 79),
+    new fruit(280, 60),
+    new fruit(450, 80),
+    new fruit(150, 390), //bridge bottom 
+    new fruit(200, 390),
+    new fruit(250, 390),
+    new fruit(300, 390),
+    new fruit(350, 390),
+    new fruit(150, 335), //bridge top
+    new fruit(200, 335),
+    new fruit(250, 335),
+    new fruit(300, 335),
+    new fruit(350, 335),
 ];
 
-
-//console.log("fruts: ", fruit.scaled);
-
+let animationFrame;
 const playerSprite = new Image();
 playerSprite.src = "/assets/pygmy/pygmy-hippo-walk.png";
 const background = new Image();
-background.src = "/assets/tattooine-game-background.png";
+background.src = "/assets/lake_background.png";
 const fruitSprite = new Image();
 fruitSprite.src = "/assets/fruit.png";
 const enemySprite = new Image();
 enemySprite.src = "assets/darthvader.png";
+const retryButton = document.getElementById('retry');
+
+
+window.onload = () => {
+    document.getElementById("retry").addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementsByClassName("win")[0].style.display = 'none';
+        document.getElementsByClassName("lose")[0].style.display = 'none';
+        stopAnimation();  // Stop the current animation
+        resetGame();      // Reset game state
+        startAnimating(15);  // Restart the animation loop
+        // console.log("i'm listening");
+    });
+
+    startAnimating(15);  // Start the animation at 15 frames per second
+};
+
+function resetGame() { // Reset player position, score, and any other game-related variables
+    player.x = 450;
+    player.y = 450;
+    enemy.x = 0;
+    enemy.y = 0;
+    score = 0;
+    player.conquered = false;
+    fruits = [
+        new fruit(120, 210),
+        new fruit(205, 79),
+        new fruit(280, 60),
+        new fruit(450, 80),
+        new fruit(150, 390), //bridge bottom 
+        new fruit(200, 390),
+        new fruit(250, 390),
+        new fruit(300, 390),
+        new fruit(350, 390),
+        new fruit(150, 335), //bridge top
+        new fruit(200, 335),
+        new fruit(250, 335),
+        new fruit(300, 335),
+        new fruit(350, 335),
+    ];
+}
 
 //Draw images
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
-
-// function arrayFruit(x, y) {
-//     // for(let i = 0; i < 5; i++) {
-//     let fruitArray = new fruit(x, y);
-//     fruits.push(fruitArray);
-//     console.log("fruit.scaled: ", fruitArray.scaled);
-//    // console.log('fruit pushed index: ', fruits[i]);
-
-//     // }
-// }
 
 function drawFruit() {
     // fruits = fruits.filter(fruit => !fruit.eaten); // Remove eaten fruits
@@ -134,23 +171,23 @@ function checkEnemy() {
         enemy.x <= player.x + player.width && //right side of enemy and left side of player
         enemy.y + enemy.height >= player.y && //bottom side of enemy and top side of player
         enemy.y <= player.y + player.height) //top side of enemy and bottom side of player
-        { 
+    {
         player.conquered = true;
         console.log('eaten3:', player.conquered);
     } else {
 
         console.log('eaten4:', player.conquered);
     }
-} 
+}
 
 
 function displayGameOver() {
- // Clear the canvas
+    // Clear the canvas
     document.getElementsByClassName("lose")[0].style.display = 'block'; //Reveal Message
 }
 
 function displayWinMessage() {
- // Clear the canvas
+    // Clear the canvas
     document.getElementsByClassName("win")[0].style.display = 'block'; //Reveal Message
 }
 
@@ -193,29 +230,22 @@ function handlePlayerFrame() {
     else player.frameX = 0;
 }
 
-/*class Player {
-    constructor(){
-        this.x = canvas.width/2; 
-        this.y = canvas.height/2;
-        this.radius = 50; 
-        this.angle = 0; 
-        this.frameX = 0; 
-        this.frameY = 0; 
-        this.frame = 0; 
-        this.spriteWidth = 498; //changes based on image file
-        this.spriteHeight = 327;
-    }
-    update(){ //updates player based on where mouse is
-        node.addEventListener('keydown', function(event) {
-            const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-        });
+function drawBackground() {
+    ctx.filter = `brightness(${0.6})`;
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    ctx.filter = 'none';
 
-    }
-}*/
+}
 
+// retryButton.addEventListener('click', () => {
+//     animate(); // Call the function to restart the animation
+//   });
 
-//player speed
+function stopAnimation() {
+    cancelAnimationFrame(animationFrame);
+}
 
+//Player Speed
 let fps, fpsInterval, startTime, now, then, elapsed;
 
 function startAnimating(fps) {
@@ -226,31 +256,29 @@ function startAnimating(fps) {
 }
 
 function animate() {
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
     now = Date.now();
     elapsed = now - then;
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
-        ctx.clearRect(0, 0, canvas.width, canvas.height); //clears between each loop
-        // ctx.drawImage(background, 0, 0, canvas.width, canvas.height); //turn x to poisiton for moving backround
-        //  drawSprite(fruitSprite, fruit.width * fruit.frameX, fruit.height * fruit.frameY, fruit.width, fruit.height,
-        //      fruit.x, fruit.y, fruit.width, fruit.height);
-        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);//clears between each loop
+
         if (player.conquered) {
             displayGameOver(); // Show the game over message if the player is conquered
             return; // Stop the game loop by returning early
-        }else if(fruits.length === 0) {
+        } else if (fruits.length === 0) {
             // All fruits are eaten
             displayWinMessage();
             return;
         }
-        
-        
+
+        drawBackground();
+
         drawFruit();
         drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height,
             player.x, player.y, player.width, player.height);
         drawSprite(enemySprite, enemy.width * enemy.frameX, enemy.height * enemy.frameY, enemy.width, enemy.height,
-                enemy.x, enemy.y, enemy.width, enemy.height);
+            enemy.x, enemy.y, enemy.width, enemy.height);
         movePlayer();
         moveEnemy();
         checkEnemy();
@@ -260,34 +288,5 @@ function animate() {
         scoreElement.textContent = "Score: " + score;
 
 
-
-
-
-
-
-
-
-        // if (player.x + player.width >= fruit.x){
-        //     console.log("colliding)");
-        // }
-
-        // if (player.x + player.width >= fruit.x){
-        //     console.log("colliding)");
-        // }
-
-
     }
 }
-
-startAnimating(15);
-
-
-// function draw() {
-//     ctx.strokeRect(5, 5, 25, 15);
-//     ctx.scale(2, 2);
-//     ctx.strokeRect(5, 5, 25, 15);
-//     ctx.scale(2, 2);
-//     ctx.strokeRect(5, 5, 25, 15);
-//     ctx.scale(2, 2);
-//     ctx.strokeRect(5, 5, 25, 15);
-//   }
