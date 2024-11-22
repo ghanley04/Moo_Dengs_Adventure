@@ -10,25 +10,30 @@
 
 <body>
     <script type="module" src="main.js"></script>
-    <div class="format">
+    <div class="title">
         <h1 class="header">Moo Deng's Adventure</h1>
-        <p id="score">Score: </p>
-        <p id="retry" style="cursor: pointer;">Play Again</p>
+
+    </div>
+    <div class="format">
+        <div class="text"> 
+            <p id="score">Score: </p>
+            <p id="retry" style="cursor: pointer;">Play Again</p>
+        </div>
+        <div>
+        <img class="background" src="/assets/lake_background.png"></img>
+        <canvas id="canvas1"></canvas>
+        <div class="win message">
+            <p>You Win! W's in the chat!!!</p>
+           
+        </div>
+        <div class="lose message">
+            <p>Yikes! That was embarrasing...</p>
         
-        <div class="format-background">
-            <img class="background" src="/assets/lake_background.png"></img>
-            <canvas id="canvas1"></canvas>
         </div>
     </div>
-    <!--add pause button to stop game-->
-    <div class="win">
-        <p>You Win! W's in the chat!!!</p>
-        <!-- <p id="retry">Play Again</p> -->
-    </div> <!--import image of drake here?-->
-    <div class="lose">
-        <p>Yikes! That was embarrasing...</p>
-        <!-- <p id="retry">Try Again</p> -->
     </div>
+    <!--add pause button to stop game-->
+
 
 </body>
 
