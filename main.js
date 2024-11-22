@@ -182,6 +182,11 @@ function checkEnemy() {
 
 
 function displayGameOver() {
+    // ctx.fillStyle = 'red';  
+    // ctx.textAlign = 'center';  
+    // ctx.textBaseline = 'middle'; 
+    // ctx.font = '50px Georgia';
+    // ctx.fillText("Yikes!! That was embarassing...", canvas.width / 2, canvas.height / 2);
     // Clear the canvas
     document.getElementsByClassName("lose")[0].style.display = 'block'; //Reveal Message
 }
