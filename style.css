@@ -64,14 +64,15 @@ body {
 }
 
 .body {
-    position: relative; /* Ensures absolute positioning works for child elements */
+    position: relative;
+    /* Ensures absolute positioning works for child elements */
 }
 
 .win {
     color: green;
 
     position: absolute;
-    font-size: 10vw;
+    font-size: 40px;
     text-align: center;
     z-index: 10;
     top: 50%;
@@ -84,13 +85,23 @@ body {
     color: red;
 
     position: absolute;
-    font-size: 10vw;
+    font-size: 40px;
     text-align: center;
     z-index: 10;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: none;
+}
+
+@media(max-width: 512px) {
+    .win {
+        font-size: 10vw;
+    }
+
+    .lose {
+        font-size: 10vw;
+    }
 }
 
 
