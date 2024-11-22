@@ -46,8 +46,8 @@ class fruit {
         this.y = y;
         this.width = 16;
         this.height = 16;
-        this.frameX = 7;
-        this.frameY = 5;
+        this.frameX = 9;
+        this.frameY = 2;
         this.speed = 9;
         this.moving = false;
         this.scaled = false;
