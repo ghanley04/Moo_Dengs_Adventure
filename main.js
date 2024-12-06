@@ -33,7 +33,7 @@ const enemy = {
     height: 48,
     frameX: 0,
     frameY: 0,
-    speed: 6,
+    speed: 8,
     moving: false,
     scaled: false,
     scale: 2,
